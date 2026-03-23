@@ -1,0 +1,27 @@
+[project]
+name = "spring2025-lectures-ljl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch",
+    "numpy",
+    "sympy",
+    "requests",
+    "sqlitedict",
+    "warcio",
+    "markdownify",
+    "tiktoken",
+    "openai",
+    "wandb",
+    "einops",
+    "jaxtyping",
+    "readable-number",
+    "triton",
+    "fasttext",
+    "mmh3",
+    "bitarray",
+    "matplotlib",
+    "kenlm",
+]
