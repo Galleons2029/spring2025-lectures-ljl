@@ -4,6 +4,7 @@ import importlib
 import inspect
 import sys
 import json
+import math
 import traceback
 import torch
 import sympy
@@ -55,6 +56,10 @@ class Trace:
 
 
 def to_primitive(value: Any) -> Any:
+    if isinstance(value, float) and not math.isfinite(value):
+        if math.isnan(value):
+            return "NaN"
+        return "Infinity" if value > 0 else "-Infinity"
     if isinstance(value, (int, float, str, bool)):
         return value
     # Force it to be a primitive
@@ -67,7 +72,11 @@ def to_serializable_value(value: Any) -> Any:
     if isinstance(value, sympy.core.numbers.Integer):
         return int(value)
     if isinstance(value, sympy.core.numbers.Float):
-        return float(value)
+        value = float(value)
+    if isinstance(value, float) and not math.isfinite(value):
+        if math.isnan(value):
+            return "NaN"
+        return "Infinity" if value > 0 else "-Infinity"
     if isinstance(value, sympy.core.symbol.Symbol):
         return str(value)  # Would be nice to signal that this is not a string
     if isinstance(value, (int, float, str, bool)):
@@ -267,4 +276,4 @@ if __name__ == "__main__":
         output_path = os.path.join(args.output_path, f"{module}.json")
         print(f"Saving trace to {output_path}...")
         with open(output_path, "w") as f:
-            json.dump(asdict(trace), f, indent=2)
+            json.dump(asdict(trace), f, indent=2, allow_nan=False)
